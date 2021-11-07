@@ -1,4 +1,4 @@
-package Homework_2;
+package homework_2;
 
 public class MainProgram {
 
