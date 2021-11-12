@@ -4,7 +4,6 @@ public class MainProgram {
     public static void main(String[] args) {
         System.out.println("Расчёт факториала числа - " + factorial(5));
         System.out.println("Расчёт квадратного уравнения - " + quadraticEquation(4, 0, 8));
-
     }
 
     /**
