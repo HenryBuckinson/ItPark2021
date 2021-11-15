@@ -25,7 +25,7 @@ public class MainProgram {
         long orderNum = scn.nextLong();
         if (orderNum > 50) {
             orderNum = 50;
-        } else if (orderNum <= 0) {
+        } else if (orderNum < 0) {
             orderNum = 1;
         }
         long prevNumber = 1;
