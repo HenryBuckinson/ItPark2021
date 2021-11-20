@@ -35,7 +35,7 @@ public class MainProgram {
         int[] resultArray = new int[lengthArray];
         Random rnd = new Random();
         for (int i = 0; i < resultArray.length; i++) {
-            resultArray[i] = rnd.nextInt(10);
+            resultArray[i] = rnd.nextInt(11);
         }
         return resultArray;
     }
