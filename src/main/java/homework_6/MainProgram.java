@@ -9,6 +9,11 @@ public class MainProgram {
         minValueOfArray(res);
         maxValueOfArray(res);
         System.out.println("Среднее значение элементов массива = " + avgOfArray(res));
+
+        /*На будущее*/
+//        System.out.println(Arrays.stream(res).max().getAsInt());
+//        System.out.println(Arrays.stream(res).min().getAsInt());
+//        System.out.println(Arrays.stream(res).average().getAsDouble());
     }
 
     /**
