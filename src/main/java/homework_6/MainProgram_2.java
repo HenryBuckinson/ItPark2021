@@ -34,9 +34,7 @@ public class MainProgram_2 {
             return cashArray[index];
         } else if (cashArray[index] == 0) {
             for (int i = 1; i <= index; i++) {
-                if (cashArray[i] != 0) {
-                    continue;
-                } else {
+                if (cashArray[i] == 0) {
                     cashArray[i] = cashArray[i - 1] + cashArray[i - 2];
                 }
             }

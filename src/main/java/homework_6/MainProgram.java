@@ -12,24 +12,25 @@ public class MainProgram {
     }
 
     /**
-     *
      * @return Результатом метод возвращает массив целых чисел в диапазоне от 0 до 10 включительно. Длина массива задаётся по запросу
      * пользователя.
      */
     public static int[] fillArray() {
         Scanner scn = new Scanner(System.in);
         System.out.println("Введите желаемую длину массива:");
-        while (!scn.hasNextInt()) {
-            System.out.println("Некорректный ввод. Введите значение заново: ");
-            scn.next();
-        }
-        int lengthArray = scn.nextInt();
-        while (lengthArray < 0) {
-            try {
-                System.out.println("Длина массива не может быть отрицательной величиной. Введите корректное значение: ");
-                lengthArray = scn.nextInt();
-            } catch (Exception e) {
-                throw new NumberFormatException("Ошибка при вводе длины массива!");
+        int lengthArray = 0;
+        while (scn.hasNextInt() || scn.hasNext()) {
+            if (scn.hasNextInt()) {
+                int test = scn.nextInt();
+                if (test > 0) {
+                    lengthArray = test;
+                    break;
+                } else {
+                    System.out.println("Длина массива не может быть отрицательной величиной. Введите значение заново: ");
+                }
+            } else if (scn.hasNext()) {
+                System.out.println("Некорректный ввод. Введите значение заново: ");
+                scn.next();
             }
         }
         int[] resultArray = new int[lengthArray];
