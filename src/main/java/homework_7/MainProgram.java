@@ -11,17 +11,17 @@ public class MainProgram {
 
         System.out.println();
 
-        Cat testCat_2 = new Cat();
-        testCat_2.swim(100);
-        testCat_2.run(200);
+        Cat testCat2 = new Cat();
+        testCat2.swim(100);
+        testCat2.run(200);
         System.out.println();
-        Dog testDog_2 = new Dog();
-        testDog_2.run(500);
-        testDog_2.swim(10);
+        Dog testDog2 = new Dog();
+        testDog2.run(500);
+        testDog2.swim(10);
         System.out.println();
-        Tiger testTiger_2 = new Tiger();
-        testTiger_2.run(900);
-        testTiger_2.swim(30);
+        Tiger testTiger2 = new Tiger();
+        testTiger2.run(900);
+        testTiger2.swim(30);
 
     }
 }
