@@ -1,57 +1,81 @@
 package homework_8_optionalExercise;
 
-import java.lang.reflect.Array;
 import java.util.Scanner;
 
 public class Matrix {
-    private int m;
-    private int n;
-    private int[][] saveValues = new int[m][n];
-
+    private int row;
+    private int column;
+    private int[][] objArray = new int[row][column];
 
     public Matrix() {
-        this.m = 2;
-        this.n = 2;
+        this.row = 2;
+        this.column = 2;
     }
 
     public Matrix(int rows, int columns) {
-        this.m = rows;
-        this.n = columns;
+        this.row = rows;
+        this.column = columns;
     }
 
     public Matrix(int i, int j, int[][] array) {
-        this.m = i;
-        this.n = j;
-        this.saveValues = array;
+        this.row = i;
+        this.column = j;
+        this.objArray = array;
+    }
+
+    /**
+     * @param order Конструктор создания единичной матрицы
+     */
+    public Matrix(int order) {
+        this.row = order;
+        this.column = order;
+        fillingUnitMatrix();
     }
 
     /**
      * @return Результатом метод возвращает значение соответствующее количеству строк в матрице.
      */
     public int getRows() {
-        return m;
+        return row;
     }
 
     /**
      * @return Результатом метод возвращает значение соответствующее количеству столбцов в матрице.
      */
     public int getCols() {
-        return n;
+        return column;
     }
 
     /**
      * @return Результатом метод возвращает двумерный массив представляющий матрицу.
      */
     public int[][] getMatrix() {
-        return saveValues;
+        return objArray;
     }
 
+    /**
+     * Результатом метод заполняет формирует единичную матрицу.
+     */
+    private void fillingUnitMatrix() {
+        System.out.println("Создание единичной матрицы...");
+        int[][] result = new int[row][column];
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[i].length; j++) {
+                if (i == j) {
+                    result[i][j] = 1;
+                } else {
+                    result[i][j] = 0;
+                }
+            }
+        }
+        objArray = result;
+    }
 
     /**
      * Метод заполняет матрицу целыми числами по запросу пользователя.
      */
     public void fillingOfMatrix() {
-        int[][] result = new int[m][n];
+        int[][] result = new int[row][column];
         System.out.println("Начинаем заполнение матрицы, введите значения: ");
         Scanner scn = new Scanner(System.in);
         for (int i = 0; i < result.length; i++) {
@@ -63,7 +87,7 @@ public class Matrix {
                 result[i][j] = scn.nextInt();
             }
         }
-        saveValues = result;
+        objArray = result;
     }
 
     /**
@@ -71,7 +95,7 @@ public class Matrix {
      */
     public void showMatrix() {
         System.out.println("Отображение матрицы: ");
-        for (int[] saveValue : saveValues) {
+        for (int[] saveValue : objArray) {
             for (int i : saveValue) {
                 System.out.print("|" + i + "| ");
             }
@@ -80,77 +104,39 @@ public class Matrix {
     }
 
     /**
-     * @param A объект матрицы.
+     * @param argMatrix объект матрицы.
      * @return Результатом метод возвращает объект матрицы получающийся суммированием с аргументом, который содержит объект матрицу.
      */
-    public Matrix sum(Matrix A) {
-        if (this.getCols() != A.getCols() | this.getRows() != A.getRows()) {
+    public Matrix sum(Matrix argMatrix) {
+        if (this.getCols() != argMatrix.getCols() | this.getRows() != argMatrix.getRows()) {
             throw new ArithmeticException("Нельзя суммировать матрицы разных размеров.");
         }
         System.out.println("Суммирование матриц: ");
-        int[][] result = new int[m][n];
-        for (int i = 0; i < saveValues.length; i++) {
-            for (int j = 0; j < saveValues[i].length; j++) {
-                result[i][j] = saveValues[i][j] + A.saveValues[i][j];
+        int[][] result = new int[row][column];
+        for (int i = 0; i < objArray.length; i++) {
+            for (int j = 0; j < objArray[i].length; j++) {
+                result[i][j] = objArray[i][j] + argMatrix.objArray[i][j];
             }
         }
-        return new Matrix(m, n, result);
+        return new Matrix(row, column, result);
     }
 
     /**
-     * @param A объект единичной матрицы.
-     * @return Результатом метод возвращает объект матрицы получающийся суммированием с аргументом, который содержит объект единичной матрицы.
-     */
-    public Matrix sum(unitMatrix A) {
-        if (this.getCols() != A.getCols() | this.getRows() != A.getRows()) {
-            throw new ArithmeticException("Нельзя суммировать матрицы разных размеров.");
-        }
-        System.out.println("Суммирование с единичной матрицей:");
-        int[][] unitMat = A.getArrayOfUnitMatrix();
-        int[][] result = new int[m][n];
-        for (int i = 0; i < saveValues.length; i++) {
-            for (int j = 0; j < saveValues[i].length; j++) {
-                result[i][j] = saveValues[i][j] + unitMat[i][j];
-            }
-        }
-        return new Matrix(m, n, result);
-    }
-
-    /**
-     * @param A объект матрицы.
+     * @param argMatrix объект матрицы.
      * @return Результатом метод возвращает объект матрицы после вычитания аргумента, который содержит объект матрицу.
      */
-    public Matrix diff(Matrix A) {
-        if (this.getCols() != A.getCols() | this.getRows() != A.getRows()) {
+    public Matrix diff(Matrix argMatrix) {
+        if (this.getCols() != argMatrix.getCols() | this.getRows() != argMatrix.getRows()) {
             throw new ArithmeticException("Нельзя вычитать матрицы разных размеров.");
         }
         System.out.println("Результат разности матриц:");
-        int[][] result = new int[m][n];
-        for (int i = 0; i < saveValues.length; i++) {
-            for (int j = 0; j < saveValues[i].length; j++) {
-                result[i][j] = saveValues[i][j] - A.saveValues[i][j];
+        int[][] result = new int[row][column];
+        for (int i = 0; i < objArray.length; i++) {
+            for (int j = 0; j < objArray[i].length; j++) {
+                result[i][j] = objArray[i][j] - argMatrix.objArray[i][j];
             }
         }
-        return new Matrix(m, n, result);
-    }
-
-    /**
-     * @param A объект единичной матрицы.
-     * @return Результатом метод возвращает объект матрицы после вычитания аргумента, который содержит объект единичной матрицы.
-     */
-    public Matrix diff(unitMatrix A) {
-        if (this.getCols() != A.getCols() | this.getRows() != A.getRows()) {
-            throw new ArithmeticException("Нельзя вычитать матрицы разных размеров.");
-        }
-        System.out.println("Суммирование с единичной матрицей:");
-        int[][] unitMat = A.getArrayOfUnitMatrix();
-        int[][] result = new int[m][n];
-        for (int i = 0; i < saveValues.length; i++) {
-            for (int j = 0; j < saveValues[i].length; j++) {
-                result[i][j] = saveValues[i][j] - unitMat[i][j];
-            }
-        }
-        return new Matrix(m, n, result);
+        return new Matrix(row, column, result);
     }
 
     /**
@@ -158,67 +144,13 @@ public class Matrix {
      */
     public Matrix invert() {
         System.out.println("Получение транспонированной матрицы...");
-        int[][] result = new int[this.n][this.m];
-        if (m == n) {   //обратииить вниманиие
-            for (int i = 0; i < saveValues.length; i++) {
-                for (int j = 0; j < saveValues[i].length; j++) {
-                    result[i][j] = saveValues[j][i];
-                }
+        int[][] result = new int[objArray[0].length][objArray.length];
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[i].length; j++) {
+                result[i][j] = objArray[j][i];
             }
         }
-        if (n > m) {
-            int[] help = new int[n * m];
-            int count = 0;
-            int count2 = 0;
-            int k = 0;
-            while (count2 < n * m) {
-                for (int i = 0; i < m; i++) {
-                    if (i == n) {
-                        break;
-                    }
-                    help[count2] = saveValues[i][k];
-                    count2++;
-                }
-                k++;
-            }
-            count = 0;
-            for (int i = 0; i < result.length; i++) {
-                for (int j = 0; j < result[i].length; j++) {
-                    while (count < help.length) {
-                        result[i][j] = help[count];
-                        count++;
-                        break;
-                    }
-                }
-            }
-        }
-        if (n < m) {
-            int[] help = new int[n * m];
-            int count = 0;
-            int count2 = 0;
-            int k = 0;
-            while (count2 < n * m) {
-                for (int i = 0; i < m; i++) {
-                    if (i == m) {
-                        break;
-                    }
-                    help[count2] = saveValues[i][k];
-                    count2++;
-                }
-                k++;
-            }
-            count = 0;
-            for (int i = 0; i < result.length; i++) {
-                for (int j = 0; j < result[i].length; j++) {
-                    while (count < help.length) {
-                        result[i][j] = help[count];
-                        count++;
-                        break;
-                    }
-                }
-            }
-        }
-        return new Matrix(m, n, result);
+        return new Matrix(row, column, result);
     }
 
     /**
@@ -227,115 +159,61 @@ public class Matrix {
      */
     public Matrix multiply(int multiplier) {
         System.out.println("Умножение матрицы на число " + multiplier + "...");
-        int[][] result = new int[m][n];
-        for (int i = 0; i < saveValues.length; i++) {
-            for (int j = 0; j < saveValues[i].length; j++) {
-                result[i][j] = saveValues[i][j] * multiplier;
+        int[][] result = new int[row][column];
+        for (int i = 0; i < objArray.length; i++) {
+            for (int j = 0; j < objArray[i].length; j++) {
+                result[i][j] = objArray[i][j] * multiplier;
             }
         }
-        return new Matrix(m, n, result);
+        return new Matrix(row, column, result);
     }
 
     /**
-     * @param k порядок степени.
+     * @param order порядок степени.
      * @return Результатом метод возвращает объект матрицы, после возведения в степень каждого элемента матрицы.
      */
-    public Matrix pow(int k) {
-        System.out.println("Возведение матрицы в степень " + k + "...");
-        int[][] result = new int[m][n];
-        for (int i = 0; i < saveValues.length; i++) {
-            for (int j = 0; j < saveValues[i].length; j++) {
-                result[i][j] = saveValues[i][j] * saveValues[i][j];
-                int c = k;
-                c -= 2;
-                while (c > 0) {
-                    result[i][j] *= saveValues[i][j];
-                    c--;
-                }
+    public Matrix pow(int order) {
+        System.out.println("Возведение матрицы в степень " + order + "...");
+        int[][] result = new int[row][column];
+        for (int i = 0; i < objArray.length; i++) {
+            for (int j = 0; j < objArray[i].length; j++) {
+                result[i][j] = (int) Math.pow(objArray[i][j], order);
             }
         }
-        return new Matrix(m, n, result);
+        return new Matrix(row, column, result);
     }
 
     /**
-     * @param A объект матрицы.
+     * @param argMatrix объект матрицы.
      * @return Результатом метод возвращает новый объект матрицы, который является результатом произведения двух матриц.
      */
-    public Matrix multiply(Matrix A) {
-        if (this.getCols() != A.getRows()) {
+    public Matrix multiply(Matrix argMatrix) {
+        int[][] result = new int[1][1];
+        int[][] secondMatrix = argMatrix.getMatrix();//Извлекается матрица из аргумента метода
+        if (objArray[0].length != secondMatrix.length) {
             throw new ArithmeticException("Количество столбцов первой матрицы не равно количеству строк второй матрицы.");
-        }
-        System.out.println("Перемножение матриц: ");
-        int count1 = 0;
-        int count2 = 0;
-        int[][] res = new int[m][n];
-        int[] resHelp = new int[m * n];
-        int[] saveValueHelp = new int[m * n];
-        for (int[] saveValue : saveValues) {
-            for (int i : saveValue) {
-                while (count1 < saveValueHelp.length) {
-                    saveValueHelp[count1] = i;
-                    count1++;
-                    break;
-                }
-            }
-        }   // "Копирую эл-ты "this" двумерного массива в одномерный массив
-        int[][] arg = A.invert().getMatrix();
-        int[] argHelp = new int[A.getCols() * A.getRows()];
-        for (int[] ints : arg) {
-            for (int j = 0; j < ints.length; j++) {
-                while (count2 < argHelp.length) {
-                    argHelp[count2] = ints[j];
-                    count2++;
-                    break;
-                }
-            }
-        }   //Копирую эл-ты А двумерного массива в одномерный массив
-        if (A.getCols() < this.getCols()) {
-            res = new int[m][A.getCols()];
-        }
-        if (A.getCols() > this.getRows()) {
-            res = new int[m][A.getCols()];
-            resHelp = new int[m * A.getCols()];
-        }
+        }//Сравнение столбцов первой и строк второй матрицы
+        if ((objArray.length == secondMatrix.length) & (objArray[0].length == secondMatrix[0].length)) {
+            int[][] res = new int[objArray.length][secondMatrix.length];
+            result = res;
+        }//Сравнение строк и столбцов матриц, уместно когда обе матрицы квадратные
+        if ((objArray.length >= secondMatrix.length & objArray[0].length <= secondMatrix[0].length)
+                | (objArray.length <= secondMatrix.length & objArray[0].length >= secondMatrix[0].length)
+                | (objArray.length <= secondMatrix.length & objArray[0].length <= secondMatrix[0].length)) {
+            int[][] res = new int[objArray.length][secondMatrix[1].length];
+            result = res;
+        }//Сравнение строк и столбцов матриц, уместно когда перемножаемые матрицы имеют разные размеры
+        System.out.println("Перемножение матриц...");
         int sum = 0;
-        int index = 0;
-        count1 = 0;
-        count2 = 0;
-        for (int i = 0; i < saveValueHelp.length; i = i + n) {
-            while (true) {
-                if (count2 == n) {
-                    Array.set(resHelp, index, sum);
-                    index++;
-                    count2 = 0;
-                    sum = 0;
-                    if (index == resHelp.length) {
-                        count1 = 0;
-                        count2 = 0;
-                        break;
-                    }
-                    continue;
+        for (int j = 0; j < result.length; j++) {
+            for (int k = 0; k < result[j].length; k++) {
+                sum = 0;
+                for (int l = 0; l < secondMatrix.length; l++) {
+                    sum += objArray[j][l] * secondMatrix[l][k];
                 }
-                if (count1 == argHelp.length) {
-                    count1 = 0;
-                    count2 = 0;
-                    break;
-                }
-                sum += saveValueHelp[i + count2] * argHelp[count1];
-                count2++;
-                count1++;
+                result[j][k] = sum;
             }
-        }
-        for (int i = 0; i < res.length; i++) {
-            for (int j = 0; j < res[i].length; j++) {
-                while (count1 < resHelp.length) {
-                    res[i][j] = resHelp[count1];
-                    count1++;
-                    break;
-                }
-            }
-        }   //Копирование рассчитанных эл-ов из одномерного массива в итоговый
-        return new Matrix(m, n, res);
+        }//Алгоритм перемножения
+        return new Matrix(row, column, result);
     }
-
 }
