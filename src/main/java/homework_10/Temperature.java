@@ -26,11 +26,11 @@ public record Temperature(double temperatureValue, char unitOfValue) implements 
             return new Temperature(temperatureValue, unitOfValue);
         } else {
             if (unitOfValue == 'C') {
-                newValue = (temperatureValue * 9 / 5) + 32;
+                newValue = (temperatureValue * TemperatureCoefficients.BACKWARD_MULTIPLIER.getValue()) + TemperatureCoefficients.ZERO_СELSIUS_IN_FAHRENHEIT.getValue();
                 newMeasure = 'F';
             }
             if (unitOfValue == 'K') {
-                newValue = (temperatureValue - tempConst) * 9 / 5 + 32;
+                newValue = (temperatureValue - tempConst) * TemperatureCoefficients.BACKWARD_MULTIPLIER.getValue() + TemperatureCoefficients.ZERO_СELSIUS_IN_FAHRENHEIT.getValue();
                 newMeasure = 'F';
             }
         }
@@ -51,7 +51,7 @@ public record Temperature(double temperatureValue, char unitOfValue) implements 
                 newMeasure = 'K';
             }
             if (unitOfValue == 'F') {
-                newValue = (temperatureValue - 32) * 5 / 9 + 273.15;
+                newValue = (temperatureValue - TemperatureCoefficients.ZERO_СELSIUS_IN_FAHRENHEIT.getValue()) * TemperatureCoefficients.FORWARD_MULTIPLIER.getValue() + tempConst;
                 newMeasure = 'K';
             }
         }
@@ -72,7 +72,7 @@ public record Temperature(double temperatureValue, char unitOfValue) implements 
                 newMeasure = 'C';
             }
             if (unitOfValue == 'F') {
-                newValue = (temperatureValue - 32) * 5 / 9;
+                newValue = (temperatureValue - TemperatureCoefficients.ZERO_СELSIUS_IN_FAHRENHEIT.getValue()) * TemperatureCoefficients.FORWARD_MULTIPLIER.getValue();
                 newMeasure = 'C';
             }
         }
