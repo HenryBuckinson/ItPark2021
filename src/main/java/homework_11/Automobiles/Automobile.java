@@ -8,11 +8,16 @@ public abstract class Automobile {
     protected double length, height, width;
     protected String carName;
 
+
+    /**
+     * @param velocity скорость в км/ч.
+     *                 Метод задаёт скорость движения для объектов Car и Truck.
+     */
+    public abstract void speed(int velocity);
+
     public String getCarName() {
         return carName;
     }
-
-    public abstract void speed(int velocity);
 
     public int getRegistrationNumber() {
         return registrationNumber;
@@ -22,9 +27,6 @@ public abstract class Automobile {
         return weight;
     }
 
-    public double getLength() {
-        return length;
-    }
 
     public double getHeight() {
         return height;

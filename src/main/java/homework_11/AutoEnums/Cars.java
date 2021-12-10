@@ -1,5 +1,8 @@
 package homework_11.AutoEnums;
 
+/**
+ * Перечисление с набором легковых авто.
+ */
 public enum Cars {
     FORD("Ford Focus"),
     AUDI("Audi R8"),

@@ -1,5 +1,8 @@
 package homework_11.AutoEnums;
 
+/**
+ * Перечисление с набором грузовых автомобилей.
+ */
 public enum Trucks {
     SCANIA("Scania R-730"),
     MAN("MAN TGX"),
