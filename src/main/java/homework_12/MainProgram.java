@@ -8,7 +8,7 @@ public class MainProgram {
         strMatrix.fillingArray();
         System.out.println(strMatrix);
         int result = strMatrix.countIntegerElements();
-        System.out.println(result);
+        System.out.println("Сумма элементов массива: " + result);
 
 
     }
