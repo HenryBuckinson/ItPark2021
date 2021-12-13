@@ -13,7 +13,7 @@ public class StringMatrix implements Countable {
 
     public StringMatrix(int rows, int columns) throws MyArraySizeException {
         if (rows != 4 | columns != 4) {
-            throw new MyArraySizeException("Массив должен быть размером строго 4 на 4.");
+            throw new MyArraySizeException("Ошибка! Массив должен быть размером строго 4 на 4.");
         }
         this.rows = rows;
         this.columns = columns;
@@ -45,9 +45,6 @@ public class StringMatrix implements Countable {
 
     @Override
     public int countIntegerElements() {
-        if (rows != 4 | columns != 4) {
-            throw new MyArraySizeException("Аргумент метода должен содержать массив размером 4 на 4!");
-        }
         int sum = 0;
         for (int i = 0; i < strArray.length; i++) {
             String[] strings = strArray[i];
@@ -56,7 +53,7 @@ public class StringMatrix implements Countable {
                 try {
                     sum += Integer.parseInt(string);
                 } catch (NumberFormatException e) {
-                    throw new MyArrayDataException("Конфликт при работе с элементом \"" + string + "\" на позиции [" + i + "] и [" + j + "]");
+                    throw new MyArrayDataException("Ошибка! Конфликт при работе с элементом \"" + string + "\" на позиции [" + i + "] и [" + j + "]");
                 }
             }
         }
