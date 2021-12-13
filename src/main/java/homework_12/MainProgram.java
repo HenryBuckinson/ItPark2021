@@ -12,10 +12,8 @@ public class MainProgram {
             System.out.println(strMatrix);
             int result = strMatrix.countIntegerElements();
             System.out.println("Сумма элементов массива: " + result);
-        } catch(MyArraySizeException a){
+        } catch (MyArraySizeException | MyArrayDataException a) {
             System.out.println(a.getMessage());
-        } catch (MyArrayDataException b){
-            System.out.println(b.getMessage());
         }
 
 
