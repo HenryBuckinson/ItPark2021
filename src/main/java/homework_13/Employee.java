@@ -16,6 +16,9 @@ public class Employee {
         uniqNumberSetter();
     }
 
+    /**
+     * Метод присваивает уникальные номера для объектов класса Employee.
+     */
     private void uniqNumberSetter() {
         int k = new Random().nextInt(0, 1001);
         if (sequenceOfUniqNumber.contains(k)) {
