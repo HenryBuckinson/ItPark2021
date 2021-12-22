@@ -1,27 +1,20 @@
 package homework_14.Classes;
 
 import homework_14.Enums.TelecomsOperators;
+import homework_14.MainProgram;
 import homework_14.MyExceptions.ExistentNumberException;
 import homework_14.MyExceptions.LengthNumberException;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 public class Caller {
     private String fullName;
     private String number;//номер телефона объекта
-    private static Collection<String> sequenceOfNumbers = new HashSet<>();//Множество для хранения уникальных мобильных номеров
-    //Каждый моб.номер в будущем будет уникальным ключом
-
-    private String[] phoneBook = new String[0];//"Начальная" записная книга каждого объекта класса
-    private static Map<String, String[]> globalPhoneBook = new HashMap<>();//Глобальный телефонный справочник, хранящий записные книги всех объектов
-    //Ключ - моб.номер абонента; Значение - его записная книга
+    private Collection<String> phoneBook = new LinkedHashSet<>();//"Начальная" записная книга каждого объекта класса
 
     public String getNumber() {
         return number;
-    }
-
-    public static Map<String, String[]> getGlobalPhoneBook() {
-        return globalPhoneBook;
     }
 
     /**
@@ -31,11 +24,11 @@ public class Caller {
      */
     public Caller(String fullName, TelecomsOperators code, String number) {
         if (number.length() > 9) {
-            throw new LengthNumberException("Некорректный ввод номера телефона!");
+            throw new LengthNumberException("Некорректный ввод номера телефона у абонента " + fullName + "!");
         }
         this.fullName = fullName;
         numberSetter(code, number);
-        globalPhoneBook.put(this.number, this.phoneBook);
+        MainProgram.globalPhoneBook.put(this.number, this.phoneBook);
     }
 
     /**
@@ -46,10 +39,10 @@ public class Caller {
      */
     private void numberSetter(TelecomsOperators code, String number) {
         String result = code.getCode() + "-" + number;
-        if (sequenceOfNumbers.contains(result)) {
+        if (MainProgram.sequenceOfNumbers.contains(result)) {
             throw new ExistentNumberException("Данный номер телефона уже существует!");
         } else {
-            sequenceOfNumbers.add(result);
+            MainProgram.sequenceOfNumbers.add(result);
             this.number = result;
         }
     }
@@ -59,11 +52,8 @@ public class Caller {
      *               Метод добавляет в записную книгу номер телефона объекта, который является аргументом метода.
      */
     public void addToPhoneBook(Caller caller) {
-        LinkedList<String> phoneBookList = new LinkedList<>(Arrays.asList(phoneBook));
-        phoneBookList.add(caller.getNumber());
-        String[] resultArray = phoneBookList.toArray(new String[0]);
-        phoneBook = resultArray;
-        globalPhoneBook.put(this.number, this.phoneBook);
+        phoneBook.add(caller.getNumber());
+        MainProgram.globalPhoneBook.put(this.number, this.phoneBook);
     }
 
     @Override
@@ -71,7 +61,8 @@ public class Caller {
         return "Caller{" +
                 "fullName='" + fullName + '\'' +
                 ", number='" + number + '\'' +
-                ", phoneBook=" + Arrays.toString(phoneBook) +
+                ", phoneBook=" + phoneBook +
                 '}';
     }
+
 }
