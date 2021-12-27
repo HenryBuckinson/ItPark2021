@@ -3,6 +3,7 @@ package homework_15;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,12 +32,12 @@ public class MainProgram {
 
     public static List<String> transformText(String text) {
         String[] resultOfSplit = text.split("\\s*(\\s|!|,|\\?|,|\\.|\\-)\\s*"); //Тире под вопросом?
-        List<String> replayStrings = Arrays.stream(resultOfSplit)
-                .toList()
-                .stream().filter(str -> Collections.frequency(Arrays.stream(resultOfSplit).toList(), str) > 1)
-                //.sorted()
-                .distinct()
-                .toList();
+        List<String> replayStrings = Arrays.stream(resultOfSplit).toList().stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet()
+                .stream()
+                .filter(e -> e.getValue() > 1)
+                .map(e -> e.getKey()).toList();
 
         List<String> uniqStrings = Arrays.stream(resultOfSplit)
                 .toList()
