@@ -3,6 +3,7 @@ package homework_15;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -19,25 +20,27 @@ public class MainProgram {
 
         String text = "Семь раз замерь, 1 раз отрежь!";
 
-        //String text = "two one asd three rty two fgh three two one one one";
+//        String text = "two one asd three rty two fgh three two one one one";
 
-        List<String> result = transformText2(text);
+        List<String> result = transformText(text);
         System.out.println(result);
 
         System.out.println();
 
-        List<String> result2 = transformText(text);
-        System.out.println(result2);
+        System.out.println();
+        idealTransformText(text);
+
     }
 
     public static List<String> transformText(String text) {
-        String[] resultOfSplit = text.split("\\s*(\\s|!|,|\\?|,|\\.|\\-)\\s*"); //Тире под вопросом?
-        List<String> replayStrings = Arrays.stream(resultOfSplit).toList().stream()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+        String[] resultOfSplit = text.split("\\s*(\\s|!|,|\\?|,|\\.|\\-)\\s*");
+        List<String> replayStrings = Arrays.stream(resultOfSplit).collect(Collectors.toMap(Function.identity(), value -> 1, Integer::sum))
                 .entrySet()
                 .stream()
-                .filter(e -> e.getValue() > 1)
-                .map(e -> e.getKey()).toList();
+                .sorted((a, b) -> b.getValue() - a.getValue())
+                .filter(key -> key.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .toList();
 
         List<String> uniqStrings = Arrays.stream(resultOfSplit)
                 .toList()
@@ -45,26 +48,17 @@ public class MainProgram {
                 .filter(str -> Collections.frequency(Arrays.stream(resultOfSplit).toList(), str) == 1)
                 .toList();
 
-        List<String> resultList = Stream.concat(replayStrings.stream(), uniqStrings.stream()).collect(Collectors.toList());
-        return resultList;
+        return Stream.concat(replayStrings.stream(), uniqStrings.stream()).collect(Collectors.toList());
     }
 
-    public static List<String> transformText2(String text) {
-        String[] resultOfSplit = text.split("\\s*(\\s|!|,|\\?|,|\\.|\\-)\\s*"); //Тире под вопросом?
-        List<String> replayStrings = Arrays.stream(resultOfSplit)
-                .toList()
-                .stream().filter(str -> Collections.frequency(Arrays.stream(resultOfSplit).toList(), str) > 1)
-                //.sorted()
-                .distinct()
-                .toList();
-
-        List<String> uniqStrings = Arrays.stream(resultOfSplit)
-                .toList()
+    public static void idealTransformText(String text) {
+        String[] resultOfSplit = text.split("\\P{L}+");
+//        String[] resultOfSplit = text.split("\\s*(\\s|!|,|\\?|,|\\.|\\-)\\s*");
+//        String[] resultOfSplit = text.split("\\W+");
+        Arrays.stream(resultOfSplit).collect(Collectors.toMap(Function.identity(), value -> 1, Integer::sum))
+                .entrySet()
                 .stream()
-                .filter(str -> Collections.frequency(Arrays.stream(resultOfSplit).toList(), str) == 1)
-                .toList();
-
-        List<String> resultList = Stream.concat(replayStrings.stream(), uniqStrings.stream()).collect(Collectors.toList());
-        return resultList;
+                .sorted((a, b) -> b.getValue() - a.getValue())
+                .forEach(entry -> System.out.print(entry.getKey() + " "));
     }
 }
