@@ -14,12 +14,11 @@ public class MainProgram {
         WriterThread thd3 = new WriterThread(objLogger, timer);
 
         timer.start();
-        while (timer.isAlive()) {
-            thd1.start();
-            thd2.start();
-            thd3.start();
-            timer.join();
-        }
+        thd1.start();
+        thd2.start();
+        thd3.start();
+        timer.join();
+
         Thread.sleep(5_000);
 
         System.out.println();
