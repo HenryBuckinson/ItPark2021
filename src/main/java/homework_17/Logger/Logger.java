@@ -10,8 +10,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 public class Logger {
@@ -19,9 +17,30 @@ public class Logger {
     private FileWriter writer;
     private FileReader reader;
     private ExecutorService threads;
-    private Lock lck = new ReentrantLock();
     private final Timer timer;
     private final Integer amountOfThreads;
+
+    /**
+     * Объект содержит логику для записи информации в текстовый файл логгера, который передается в метод beginLogging().
+     */
+    private Callable<Void> startThreads = new Callable<Void>() {
+        @Override
+        public Void call() {
+            try {
+                System.out.println("Поток " + Thread.currentThread().getName() + " запустился.");
+                while (timer.isAlive()) {
+                    writer.write("Имя потока: " + Thread.currentThread().getName() + ". Время: " + new Date() + "\n");
+                    Thread.sleep(new Random().nextInt(5_000));
+                }
+                writer.close();
+                System.out.println("Поток " + Thread.currentThread().getName() + " закончился.");
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+            return null;
+        }
+    };
 
     @SneakyThrows
     public Logger(File file, Integer amountOfThreads, Timer timer) {
@@ -62,29 +81,4 @@ public class Logger {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Объект содержит логику для записи информации в текстовый файл логгера, который передается в метод beginLogging().
-     */
-    private Callable<Void> startThreads = new Callable<Void>() {
-        @Override
-        public Void call() {
-            try {
-                lck.tryLock();
-                System.out.println("Поток " + Thread.currentThread().getName() + " запустился.");
-                while (timer.isAlive()) {
-                    writer.write("Имя потока: " + Thread.currentThread().getName() + ". Время: " + new Date() + "\n");
-                    Thread.sleep(new Random().nextInt(5_000));
-                }
-                writer.close();
-                System.out.println("Поток " + Thread.currentThread().getName() + " закончился.");
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            } finally {
-                lck.unlock();
-            }
-            return null;
-        }
-    };
 }
