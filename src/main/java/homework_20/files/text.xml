@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<employeeWrapper>
+    <employee id="1234" login="mattMess" name="Matt" surname="Messenger">
+        <department>
+            <city>New York</city>
+            <division>Human Resources</division>
+        </department>
+        <position>
+            <crewSkill>KPI Dashboards</crewSkill>
+            <salary>20000</salary>
+        </position>
+    </employee>
+    <employee id="5678" login="angelLean" name="Angelique" surname="Leander">
+        <department>
+            <city>Leiria</city>
+            <division>Engineering</division>
+        </department>
+        <position>
+            <crewSkill>Participant Observation</crewSkill>
+            <salary>30000</salary>
+        </position>
+    </employee>
+    <employee id="9101" login="vanNor" name="Vanny" surname="Norvel">
+        <department>
+            <city>Bcharré</city>
+            <division>Services</division>
+        </department>
+        <position>
+            <crewSkill>TBS</crewSkill>
+            <salary>40000</salary>
+        </position>
+    </employee>
+    <employee id="1213" login="andMac" name="Anders" surname="Maciocia">
+        <department>
+            <city>Hegarmanah</city>
+            <division>Accounting</division>
+        </department>
+        <position>
+            <crewSkill>GCCS</crewSkill>
+            <salary>50000</salary>
+        </position>
+    </employee>
+    <employee id="1415" login="fredThe" name="Fredric" surname="Theobald">
+        <department>
+            <city>Cikalang</city>
+            <division>Business Development</division>
+        </department>
+        <position>
+            <crewSkill>Kinetics</crewSkill>
+            <salary>60000</salary>
+        </position>
+    </employee>
+</employeeWrapper>
