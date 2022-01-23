@@ -55,6 +55,7 @@ public class MainProgram {
 
     @SneakyThrows
     private static void listOfSalaryHigherThanAVG(Path path) {
+        System.out.print("Работники у которых зарплата выше средней: ");
         Path path1 = Paths.get(String.valueOf(path));
         try (FileInputStream fileIS = new FileInputStream(path1.toFile())) {
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
@@ -62,7 +63,7 @@ public class MainProgram {
             Document xmlDocument = builder.parse(fileIS);
             XPath xPath = XPathFactory.newInstance().newXPath();
             String avgSalary = "sum(/employeeWrapper/employee/position/salary) div count(/employeeWrapper/employee/position/salary)";
-            NodeList evaluate = (NodeList) xPath.compile("/employeeWrapper/employee[*]/position/salary[text() > " + avgSalary + "]/text()").evaluate(xmlDocument, XPathConstants.NODESET);
+            NodeList evaluate = (NodeList) xPath.compile("/employeeWrapper/employee[*]/position/salary[text() > " + avgSalary + "]/ancestor::employee/attribute::name").evaluate(xmlDocument, XPathConstants.NODESET);
             List<String> resultList = new ArrayList<>();
             for (int i = 0; i < evaluate.getLength(); i++) {
                 resultList.add(evaluate.item(i).getNodeValue());
