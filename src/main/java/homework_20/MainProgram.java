@@ -2,11 +2,12 @@ package homework_20;
 
 import homework_20.classes.Department;
 import homework_20.classes.Employee;
-import homework_20.classes.EmployeeWrapper;
+import homework_20.classes.EmployeeList;
 import homework_20.classes.Position;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import lombok.SneakyThrows;
+import org.json.XML;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -17,8 +18,10 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.FileInputStream;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,62 +47,76 @@ public class MainProgram {
                 new Position("Kinetics", 60000));
 
 
-        EmployeeWrapper list = new EmployeeWrapper();
-        list.setEmployee(Arrays.asList(obj, obj1, obj2, obj3, obj4));
-        writeToXML(list);
+        EmployeeList list = new EmployeeList();
+        EmployeeList oneEmployee = new EmployeeList();
+        list.setEmployee(Arrays.asList(obj, obj1, obj2, obj3, obj4));//Список из всех работников
+        oneEmployee.setEmployee(List.of(obj));//Список из одного работника
 
-        listOfSalaryHigherThanAVG(Paths.get("src\\main\\java\\homework_20\\files\\text.xml"));
+        writeToXML(list, "listOfEmployee.xml");//файл сформируется в папке resources
+        writeToXML(oneEmployee, "theFirstEmployee.xml");//файл сформируется в папке resources
 
+        listOfSalaryHigherThanAVG("listOfEmployee.xml");
 
+        convertFromXmlToJson("listOfEmployee.xml");
+        convertFromXmlToJson("theFirstEmployee.xml");
+
+//        showObjectInXML(list);
     }
 
     @SneakyThrows
-    private static void listOfSalaryHigherThanAVG(Path path) {
-        System.out.print("Работники у которых зарплата выше средней: ");
-        Path path1 = Paths.get(String.valueOf(path));
-        try (FileInputStream fileIS = new FileInputStream(path1.toFile())) {
+    private static void listOfSalaryHigherThanAVG(String fileName) {
+        Path path = Path.of("G:\\Program Files\\IDEA_Projects\\homework-1\\src\\main\\resources\\homework_20_result\\" + fileName);
+        Path pathRes = Paths.get(String.valueOf(path));
+        try (FileInputStream fileIS = new FileInputStream(pathRes.toFile())) {
             DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = builderFactory.newDocumentBuilder();
             Document xmlDocument = builder.parse(fileIS);
             XPath xPath = XPathFactory.newInstance().newXPath();
-            String avgSalary = "sum(/employeeWrapper/employee/position/salary) div count(/employeeWrapper/employee/position/salary)";
-            NodeList evaluate = (NodeList) xPath.compile("/employeeWrapper/employee[*]/position/salary[text() > " + avgSalary + "]/ancestor::employee/attribute::name").evaluate(xmlDocument, XPathConstants.NODESET);
+            String avgSalary = "sum(/employeeList/employee/position/salary) div count(/employeeList/employee/position/salary)";
+            NodeList evaluate = (NodeList) xPath.compile("/employeeList/employee[*]/position/salary[text() > " + avgSalary + "]/ancestor::employee/attribute::name").evaluate(xmlDocument, XPathConstants.NODESET);
             List<String> resultList = new ArrayList<>();
             for (int i = 0; i < evaluate.getLength(); i++) {
                 resultList.add(evaluate.item(i).getNodeValue());
             }
+            System.out.print("Работники у которых зарплата выше средней: ");
             System.out.println(resultList);
         }
     }
 
     @SneakyThrows
-    private static void showObjectInXML(Employee obj) {
+    private static void showObjectInXML(EmployeeList obj) {
         StringWriter strWrt = new StringWriter();
-        JAXBContext jaxbContext = JAXBContext.newInstance(Employee.class);
+        JAXBContext jaxbContext = JAXBContext.newInstance(EmployeeList.class);
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         marshaller.marshal(obj, strWrt);
         System.out.println(strWrt);
     }
 
+    /**
+     * @param obj      - объект класса EmployeeList.
+     * @param fileName - имя файла, которое далее сформируется в директории resources.
+     */
     @SneakyThrows
-    private static void writeToXML(Employee obj) {
-        JAXBContext jaxbContext = JAXBContext.newInstance(Employee.class);
+    private static void writeToXML(EmployeeList obj, String fileName) {
+        JAXBContext jaxbContext = JAXBContext.newInstance(EmployeeList.class);
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        Path path = Paths.get("G:\\Program Files\\IDEA_Projects\\homework-1\\src\\main\\java\\homework_20\\files\\text.xml");
+        String filePath = "G:\\Program Files\\IDEA_Projects\\homework-1\\src\\main\\resources\\homework_20_result\\" + fileName;
+        Path path = Paths.get(filePath);
         marshaller.marshal(obj, path.toFile());
-        System.out.println("Объект добавлен в XML-файл.");
+        System.out.println("XML-файл \"" + fileName + "\" создан.");
     }
 
     @SneakyThrows
-    private static void writeToXML(EmployeeWrapper obj) {
-        JAXBContext jaxbContext = JAXBContext.newInstance(EmployeeWrapper.class);
-        Marshaller marshaller = jaxbContext.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        Path path = Paths.get("G:\\Program Files\\IDEA_Projects\\homework-1\\src\\main\\java\\homework_20\\files\\text.xml");
-        marshaller.marshal(obj, path.toFile());
-        System.out.println("Объект добавлен в XML-файл.");
+    private static void convertFromXmlToJson(String fileName) {
+        String filePath = "G:\\Program Files\\IDEA_Projects\\homework-1\\src\\main\\resources\\homework_20_result\\" + fileName;
+        Path path = Paths.get(filePath);
+        String json = XML.toJSONObject(String.join("", Files.readAllLines(path))).toString();
+        String substring = fileName.substring(0, fileName.length() - 4);
+        Path jsonPath = Path.of("G:\\Program Files\\IDEA_Projects\\homework-1\\src\\main\\resources\\homework_20_result\\json_documents\\" + substring + ".json");
+        Files.writeString(jsonPath, json, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
+
 }
 

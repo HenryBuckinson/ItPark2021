@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @XmlRootElement
-public class EmployeeWrapper {
+public class EmployeeList {
     private List<Employee> employee;
 }
