@@ -9,6 +9,4 @@ import java.lang.annotation.Target;
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 public @interface Blocked {
     boolean flag() default false;
-
-    String value() default "В доступе операции отказано";
 }

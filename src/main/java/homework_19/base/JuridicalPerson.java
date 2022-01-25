@@ -18,36 +18,33 @@ public class JuridicalPerson implements Accountable {
     private final String organization;
 
     @Override
-    public void depositForJuridicalPersons(BigDecimal amount, @Blocked Boolean permission) {
-        if (permission) {
-            this.money = this.money.add(amount);
-            System.out.println("Операция пополнения прошла успешно!");
-        } else {
-            System.out.print("У юридического лица " + this.name + " " + this.surname);
-            throw new NoPermissionException(" нет разрешения на пополнение счета!");
+    public void deposit(BigDecimal amount, @Blocked Boolean permission) {
+        try {
+            if (permission) {
+                this.money = this.money.add(amount);
+                System.out.println("Операция пополнения прошла успешно!");
+            } else {
+                System.out.print("У юридического лица " + this.name + " " + this.surname);
+                throw new NoPermissionException(" нет разрешения на пополнение счета!");
+            }
+        } catch (NoPermissionException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     @Override
-    public void withdrawForJuridicalPersons(BigDecimal amount, @Blocked() Boolean permission) {
-        if (permission) {
-            this.money = this.money.subtract(amount);
-            System.out.println("Операция снятия денежных средств прошла успешно!");
-        } else {
-            System.out.print("У юридического лица " + this.name + " " + this.surname);
-            throw new NoPermissionException(" нет разрешения на снятие денежных средств со счета!");
+    public void withdraw(BigDecimal amount, @Blocked() Boolean permission) {
+        try {
+            if (permission) {
+                this.money = this.money.subtract(amount);
+                System.out.println("Операция снятия денежных средств прошла успешно!");
+            } else {
+                System.out.print("У юридического лица " + this.name + " " + this.surname);
+                throw new NoPermissionException(" нет разрешения на снятие денежных средств со счета!");
+            }
+        } catch (NoPermissionException e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    @Deprecated
-    @Override
-    public void depositForIndividualPersons(BigDecimal amount) {
-
-    }
-
-    @Deprecated
-    @Override
-    public void withdrawForIndividualPersons(BigDecimal amount) {
-
-    }
 }

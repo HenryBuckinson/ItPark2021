@@ -38,7 +38,7 @@ public class MainProgram {
         organizationPrivateField.setAccessible(true);
         organizationPrivateField.set(juridicalPerson, "MI6");
         System.out.println("Объект после изменения закрытого поля: " + juridicalPerson);
-        Method deposit = juridicalPersonClass.getDeclaredMethod("depositForJuridicalPersons", BigDecimal.class, Boolean.class);
+        Method deposit = juridicalPersonClass.getDeclaredMethod("deposit", BigDecimal.class, Boolean.class);
         deposit.invoke(juridicalPerson, new BigDecimal(3_000), true);
         System.out.println("Объект после изменения закрытого поля: " + juridicalPerson);
         System.out.println("--------------------------------------------------------------------------------");
@@ -69,8 +69,9 @@ public class MainProgram {
                 new Class[]{Accountable.class},
                 new ProxyBlocked(juridicalPerson));
 
-        accountable.depositForJuridicalPersons(new BigDecimal(100_000), true);
-        accountable.withdrawForJuridicalPersons(new BigDecimal(50_000), null);
+        accountable.deposit(new BigDecimal(100_000), null);
+        accountable.withdraw(new BigDecimal(50_000), true);
+
         System.out.println("Объект прокси: " + accountable);
         System.out.println("Исходный объект: " + juridicalPerson);
         System.out.println("--------------------------------------------------------------------------------");
@@ -79,12 +80,10 @@ public class MainProgram {
         Accountable accountable1 = (Accountable) Proxy.newProxyInstance(Accountable.class.getClassLoader(),
                 new Class[]{Accountable.class},
                 new ProxyBlocked(individualPerson));
-        try {
-            accountable1.depositForIndividualPersons(new BigDecimal(5_000));
-            accountable1.withdrawForIndividualPersons(new BigDecimal(2_000));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+
+        accountable1.deposit(new BigDecimal(5_000), true);
+        accountable1.withdraw(new BigDecimal(2_000), true);
+
         System.out.println("Объект прокси: " + accountable1);
         System.out.println("Исходный объект: " + individualPerson);
         System.out.println("--------------------------------------------------------------------------------");
@@ -118,14 +117,17 @@ public class MainProgram {
                 }
                 Blocked annotation = declaredMethod.getAnnotation(Blocked.class);
                 if (annotation != null) {
-                    throw new NoPermissionException("No permission");
-//                    System.out.println("В доступе операции отказано!");
-//                    return null;
+                    if (declaredMethod.getName().equals("deposit")) {
+                        throw new NoPermissionException("Операция на пополнение счета отклонена!");
+                    }
+                    if (declaredMethod.getName().equals("withdraw")) {
+                        throw new NoPermissionException("Нет разрешения для снятия денежных средств!");
+                    }
                 }
                 result = declaredMethod.invoke(origin, args);
 
             } catch (Exception e) {
-                System.out.println(e.getCause().getMessage());
+                System.out.println(e.getMessage());
             }
             return result;
         }
