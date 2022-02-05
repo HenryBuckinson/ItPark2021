@@ -1,6 +1,9 @@
 package homework_24;
 
-import homework_24.classes.DataBaseLoader;
+import homework_24.classes.DataBaseConnector;
+import homework_24.classes.DataBaseCreator;
+import homework_24.classes.DataBaseFilter;
+import homework_24.classes.DataBaseInserter;
 import lombok.SneakyThrows;
 
 import java.io.*;
@@ -11,13 +14,21 @@ public class MainProgram {
 
     @SneakyThrows
     public static void main(String[] args) {
+
         convertFromCsvToSql("Cars", "id", "Mark", "Model", "Year");
-        DataBaseLoader tableCars = new DataBaseLoader();
-        tableCars.createTable("Cars", "id", "Mark", "Model", "Year");
-        tableCars.insertValuesFromSqlFile(Path.of("G:\\Program Files\\IDEA_Projects\\homework-1\\src\\main\\resources\\homework_24_files\\result_file.sql"));
-        tableCars.showMarks("Mazda");
-        tableCars.showMarks("Ford");
-        tableCars.showModels("Accord");
+
+        DataBaseConnector connector = new DataBaseConnector();  //Объект для установления соединения
+        DataBaseCreator creator = new DataBaseCreator(connector);  //Объект для создания тааблицы
+        DataBaseInserter inserter = new DataBaseInserter(connector);   //Объект для вставки данных в БД
+        DataBaseFilter filter = new DataBaseFilter(connector); //Объект для фильтрации данных в БД
+
+        creator.createTable("Cars", "id", "Mark", "Model", "Year");
+        inserter.insertValuesFromSqlFile(Path.of("src\\main\\resources\\homework_24-25_files\\result_file.sql"));
+        filter.showMarks("Mazda");
+        filter.showMarks("Ford");
+        filter.showModels("Accord");
+
+
     }
 
     /**
@@ -28,8 +39,8 @@ public class MainProgram {
     @SneakyThrows
     public static void convertFromCsvToSql(String tableName, String... column) {
         String columnLines = columnConstructor(column);
-        try (BufferedReader input = new BufferedReader(new FileReader(Paths.get("G:\\Program Files\\IDEA_Projects\\homework-1\\src\\main\\resources\\homework_24_files\\file.csv").toFile()));
-             Writer output = new BufferedWriter(new FileWriter(Paths.get("G:\\Program Files\\IDEA_Projects\\homework-1\\src\\main\\resources\\homework_24_files\\result_file.sql").toFile()))) {
+        try (BufferedReader input = new BufferedReader(new FileReader(Paths.get("src\\main\\resources\\homework_24-25_files\\file.csv").toFile()));
+             Writer output = new BufferedWriter(new FileWriter(Paths.get("src\\main\\resources\\homework_24-25_files\\result_file.sql").toFile()))) {
             String line;
             String[] st;
             while ((line = input.readLine()) != null) {
@@ -43,12 +54,11 @@ public class MainProgram {
         }
     }
 
-
     private static String wrappingRowValues(String[] column) {
         StringBuilder wrappingRows = new StringBuilder();
         wrappingRows.append("(");
         for (int i = 0; i < column.length; i++) {
-            wrappingRows.append("'" + column[i] + "'").append(", ");
+            wrappingRows.append("'").append(column[i]).append("'").append(", ");
             if (i == column.length - 1) {
                 wrappingRows.deleteCharAt(wrappingRows.length() - 1);
                 wrappingRows.deleteCharAt(wrappingRows.length() - 1);
@@ -62,7 +72,7 @@ public class MainProgram {
         StringBuilder columnLines = new StringBuilder();
         columnLines.append("(");
         for (int i = 0; i < column.length; i++) {
-            columnLines.append("" + column[i] + ",").append(" ");
+            columnLines.append("").append(column[i]).append(",").append(" ");
             if (i == column.length - 1) {
                 columnLines.deleteCharAt(columnLines.length() - 1);
                 columnLines.deleteCharAt(columnLines.length() - 1);
