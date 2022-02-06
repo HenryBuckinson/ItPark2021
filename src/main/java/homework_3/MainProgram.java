@@ -1,5 +1,9 @@
 package homework_3;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class MainProgram {
     public static void main(String[] args) {
         System.out.println("Расчёт факториала числа - " + factorial(5));
@@ -10,6 +14,7 @@ public class MainProgram {
      * @param n Целочисленный входной параметр
      * @return Метод результатом возвращает факториал числа, переданного аргументом методу.
      */
+    @Autowired
     public static long factorial(long n) {
         if (n == 0) {
             return 1;

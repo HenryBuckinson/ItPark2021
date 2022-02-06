@@ -1,5 +1,8 @@
 package homework_10;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public record Temperature(double temperatureValue, char unitOfValue) implements Converter {
 
     public Temperature(double temperatureValue, char unitOfValue) {
