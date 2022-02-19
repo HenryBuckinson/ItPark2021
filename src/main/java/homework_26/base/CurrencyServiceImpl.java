@@ -1,5 +1,5 @@
 package homework_26.base;
 
-public interface Gettable {
+public interface CurrencyServiceImpl {
     void getRubInfoRelateTo(String valute);
 }
