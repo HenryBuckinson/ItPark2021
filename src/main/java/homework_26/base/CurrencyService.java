@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 /**
- * Класс служит для получения и оброботки информации о валютах с ресурса: "https://www.cbr-xml-daily.ru/daily_json.js\".
+ * Класс служит для получения и обработки информации о валютах с ресурса: "https://www.cbr-xml-daily.ru/daily_json.js\".
  */
 @Component
 @NoArgsConstructor
@@ -22,12 +22,24 @@ public class CurrencyService implements CurrencyServiceImpl {
 
     private Map<String, Response.Valute> currencyCache = new LinkedHashMap<>();
 
+    /**
+     * @param valute - сокращённое название интересующей валюты.
+     *               Метод отображает в консоль информацию о валюте RUB, по отношению к аргументу метода - valute.
+     */
     @Override
     public void getRubInfoRelateTo(String valute) {
-        String currencyInformationFromCbr = "https://www.cbr-xml-daily.ru/daily_json.js";
+        String currencyInfoFromUrl = "https://www.cbr-xml-daily.ru/daily_json.js";
         if (currencyCache.isEmpty()) {
-            CacheDataFromAPI(currencyInformationFromCbr);
+            getCurrencyInfo(currencyInfoFromUrl);
         }
+        getInfoFromCache(valute);
+    }
+
+    /**
+     * @param valute - сокращённое название валюты.
+     *               Метод служит для получения информации об интересующей валюте из кэша.
+     */
+    private void getInfoFromCache(String valute) {
         for (Map.Entry<String, Response.Valute> element : currencyCache.entrySet()) {
             if (element.getKey().equals(valute)) {
                 Response.Valute value = element.getValue();
@@ -40,8 +52,13 @@ public class CurrencyService implements CurrencyServiceImpl {
         }
     }
 
+    /**
+     * @param url - ссылка на ресурс "Курсы валют ЦБ РФ".
+     *            Метод служит для получения информации о всех валютах с ресурса "Курсы валют ЦБ РФ", которая по итогу загружается
+     *            в кэш для дальнейшего использования.
+     */
     @SneakyThrows
-    private void CacheDataFromAPI(String url) {
+    private void getCurrencyInfo(String url) {
         URL currencyUrl = new URL(url);
         try (InputStream is = currencyUrl.openStream()) {
             ObjectMapper mapper = new ObjectMapper();
