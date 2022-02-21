@@ -2,22 +2,24 @@ package homework_27.impls;
 
 import homework_27.interfaces.PrototypePrinter;
 import homework_27.interfaces.SingletonPrinter;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Data
+@AllArgsConstructor
 public class SingletonPrinterImpl implements SingletonPrinter {
 
 
+    private final PrototypePrinter protoPrinter;
+
     @Override
     public void singletonPrint() {
-        System.out.println("Singleton bean text");
+        System.out.println("Singleton-bean text and his hashCode: " + this.hashCode());
     }
 
     @Override
-    public PrototypePrinter advancePrint() {
-        System.out.print("Используется прокси...");
-        return new PrototypePrinterImpl();
+    public void advancePrint() {
+        System.out.print("Используется прокси... ");
+        protoPrinter.prototypePrint();
     }
 }

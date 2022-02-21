@@ -7,24 +7,33 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class MainProgram {
     public static void main(String[] args) {
-
+        System.out.println();
         AnnotationConfigApplicationContext annotationContext = new AnnotationConfigApplicationContext(AppConfig.class);
-        SingletonPrinter bean1 = annotationContext.getBean(SingletonPrinter.class);
-        PrototypePrinter bean2 = annotationContext.getBean(PrototypePrinter.class);
 
-        System.out.println("Сводка по бину bean1:");
-        bean1.singletonPrint();
-        bean1.advancePrint().prototypePrint();
+        SingletonPrinter singleBean1 = annotationContext.getBean(SingletonPrinter.class);
+        SingletonPrinter singleBean11 = annotationContext.getBean(SingletonPrinter.class);
+        SingletonPrinter singleBean111 = annotationContext.getBean(SingletonPrinter.class);
+
+        PrototypePrinter prototypeBean2 = annotationContext.getBean(PrototypePrinter.class);
+        PrototypePrinter prototypeBean22 = annotationContext.getBean(PrototypePrinter.class);
+        PrototypePrinter prototypeBean222 = annotationContext.getBean(PrototypePrinter.class);
+
+        singleBean1.singletonPrint();
+        singleBean1.advancePrint();
+
+        singleBean11.singletonPrint();
+        singleBean11.advancePrint();
+
+        singleBean111.singletonPrint();
+        singleBean111.advancePrint();
 
         System.out.println();
 
-        System.out.println("Сводка по бину bean2:");
-        bean2.prototypePrint();
 
-        System.out.println();
+        prototypeBean2.prototypePrint();
+        prototypeBean22.prototypePrint();
+        prototypeBean222.prototypePrint();
 
-        System.out.println(bean1.hashCode());
-        System.out.println(bean2.hashCode());
-        System.out.println("The end");
+        
     }
 }

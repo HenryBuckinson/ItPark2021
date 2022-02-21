@@ -11,17 +11,16 @@ import org.springframework.context.annotation.*;
 @ComponentScan("homework_27")
 public class AppConfig {
 
-
     @Bean
-    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.INTERFACES)
     PrototypePrinter protPrinter() {
         return new PrototypePrinterImpl();
     }
 
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    SingletonPrinter singPrinter() {
-        return new SingletonPrinterImpl();
+    SingletonPrinter singPrinter(PrototypePrinter pt) {
+        return new SingletonPrinterImpl(pt);
     }
 
 
